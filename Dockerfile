@@ -2,27 +2,25 @@
 # Basis-Image: Schlanker Python-Build
 FROM python:3.10-slim
 
-# 1. Installiere den Paketmanager 'uv' separat mit pip
-# Der Fehler 'exit code 2' kommt oft daher, dass uv nicht im Pfad gefunden wird.
+# 1. Installiere den Paketmanager 'uv'
 RUN pip install --no-cache-dir uv
 
-# 2. Umgebungsvariable PATH (Optional, aber robust)
-# Stellt sicher, dass 'uv' in nachfolgenden Schritten gefunden wird.
+# 2. Optionale, aber sinnvolle Umgebungsvariablen
 ENV PATH="/usr/local/bin:$PATH"
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
-# 3. Installiere die Anwendungsabhängigkeiten (FastAPI, Uvicorn) mit uv
-# Dies ersetzt die fehlgeschlagene RUN-Zeile.
-RUN uv pip install fastapi uvicorn
+# 3. Installiere FastAPI + Uvicorn ins System (nicht in venv!)
+RUN uv pip install --system fastapi uvicorn
 
-# Arbeitsverzeichnis im Container festlegen
+# 4. Arbeitsverzeichnis
 WORKDIR /app
 
-# Anwendungscode kopieren
+# 5. Anwendungscode kopieren
 COPY main.py .
 
-# Port
+# 6. Port öffnen
 EXPOSE 8000
 
-# Startbefehl
+# 7. Startbefehl
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
