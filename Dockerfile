@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED 1
 
 # 3. Installiere die Anwendungsabhängigkeiten (FastAPI, Uvicorn) mit uv
 # Dies ersetzt die fehlgeschlagene RUN-Zeile.
-RUN uv install fastapi uvicorn
+RUN uv pip install fastapi uvicorn
 
 # Arbeitsverzeichnis im Container festlegen
 WORKDIR /app
