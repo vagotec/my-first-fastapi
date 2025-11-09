@@ -1,11 +1,16 @@
 # Dockerfile
 FROM python:3.10-slim
 
-# Installiere uv und die Abhängigkeiten in einem Schritt
-RUN pip install uv &&     uv install fastapi uvicorn
+# 1. Installiere pip und uv separat, um Konflikte zu vermeiden
+RUN pip install --no-cache-dir uv
 
-# Umgebungsvariable setzen
-ENV PYTHONUNBUFFERED 1
+# 2. Füge den Pfad für uv zur Umgebungsvariable PATH hinzu
+# Dies stellt sicher, dass 'uv' in nachfolgenden Schritten gefunden wird.
+ENV PATH="/usr/local/bin:$PATH"
+
+# 3. Installiere die Anwendungsabhängigkeiten mit uv
+# Verwende 'uv pip install' oder den Alias 'uv install' direkt
+RUN uv install fastapi uvicorn
 
 # Arbeitsverzeichnis im Container festlegen
 WORKDIR /app
@@ -18,3 +23,4 @@ EXPOSE 8000
 
 # Startbefehl
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
